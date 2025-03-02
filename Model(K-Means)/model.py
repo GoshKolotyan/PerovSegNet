@@ -53,7 +53,6 @@ class Segmenter:
         avg_intensity = np.sum(cluster_centers, axis=1)
         sorted_indices = np.argsort(avg_intensity)
 
-        background_cluster = sorted_indices[0]
         material_cluster = sorted_indices[1]
 
         binary_mask = np.where(label2d == material_cluster, 1, 0)
