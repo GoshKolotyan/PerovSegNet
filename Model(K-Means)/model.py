@@ -1,3 +1,4 @@
+import os
 import cv2
 import argparse
 import numpy as np
@@ -7,7 +8,7 @@ from sklearn.cluster import KMeans
 
 class Segmenter:
     def __init__(self, image_path):
-        self.image_path = image_path
+        self.image_path = "../"+image_path
 
         self.img_rgb = cv2.cvtColor(cv2.imread(self.image_path), cv2.COLOR_BGR2RGB)
         self.img_gray = cv2.imread(self.image_path, cv2.IMREAD_GRAYSCALE)
@@ -78,6 +79,25 @@ class Segmenter:
         new_labels_2d = new_labels_full.reshape(segmented_image_material.shape[:2])
         return new_labels_2d
 
+    def _save_image_(self, combined_background, material_percentage):
+        plt.imshow(combined_background)
+        plt.title(f"Overlay: Material Al {material_percentage:.2f}%")
+        plt.axis("off")
+        plt.tight_layout()
+
+        save_dir = "Predictions"
+        if not os.path.exists(save_dir):
+            os.makedirs(save_dir, exist_ok=True)
+
+        filename = os.path.basename(self.image_path)[:-4] + "_percentage.png"
+        save_path = os.path.join(save_dir, filename)
+
+        plt.savefig(save_path)
+        print(f"Saved in {save_path}")
+
+        plt.close()
+
+
     def _plot_second_pass(
         self,
         segmented_image_background_first,
@@ -110,6 +130,9 @@ class Segmenter:
         plt.axis("off")
         plt.tight_layout()
         plt.show()
+
+        self._save_image_(combined_background=combined_background, 
+                          material_percentage=material_percentage)
 
     def __call__(self):
         pixels = self._load_image()
