@@ -1,4 +1,3 @@
-import os
 import logging
 
 def validate_upload(uploaded_file) -> bool:

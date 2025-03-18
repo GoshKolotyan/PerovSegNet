@@ -1,13 +1,9 @@
-import io
-import os
 import logging
 import numpy as np
 import streamlit as st
 
-from PIL import Image
 from typing import Tuple
 from .model import Segmenter
-from config import AppConfig
 
 class ImageProcessor:
     def __init__(self, image_bytes: str):
@@ -27,10 +23,8 @@ class ImageProcessor:
         try:
             segmenter = self.segmenter
 
-            # Load image pixels
             pixels = segmenter._load_image()
 
-            # First KMeans pass
             label2d, cluster_centers = segmenter._kmeans_first_pass(
                 pixels
             )
@@ -43,7 +37,6 @@ class ImageProcessor:
             segmented_image_material_first[binary_mask == 0] = [0, 0, 0]
             segmented_image_background_first[binary_mask == 1] = [0, 0, 0]
 
-            # Second segmentation pass
             new_labels_2d = segmenter._second_segmentation(segmented_image_material_first)
 
             second_centers = segmenter.second_kmeans.cluster_centers_
@@ -56,12 +49,10 @@ class ImageProcessor:
             segmented_image_material_second[~material_mask_2] = [0, 0, 0]
             segmented_image_background_second[material_mask_2] = [0, 0, 0]
 
-            # Combine results
             combined_background = segmented_image_background_first.copy()
             mask = np.any(segmented_image_background_second != [0, 0, 0], axis=-1)
             combined_background[mask] = segmented_image_background_second[mask]
 
-            # Calculate percentage
             total_pixels = segmenter.img_gray.size
             mask_non_black = np.any(combined_background != [0, 0, 0], axis=-1)
             material_pixels = np.count_nonzero(mask_non_black)
