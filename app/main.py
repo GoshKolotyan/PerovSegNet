@@ -1,25 +1,14 @@
-import streamlit as st
-import logging
-from ui.components import file_uploader, display_results
-from processing.image_processor import ImageProcessor
-from processing.security import validate_upload
-from config import AppConfig
 import os
 import cv2
+import logging
+from datetime import datetime
+import streamlit as st
 
-# Assuming result is accessible globally or pass as a parameter
-def save_results(save_path, result):
-    if not os.path.exists(save_path):
-        os.makedirs(save_path)
+from config import AppConfig
+from processing.security import validate_upload
+from processing.image_processor import ImageProcessor
+from ui.components import file_uploader, display_results
 
-    save_file = os.path.join(save_path, "segmented_result.png")
-
-    # Convert from RGB to BGR before saving, if needed
-    result_bgr = cv2.cvtColor(result, cv2.COLOR_RGB2BGR)
-    
-    cv2.imwrite(save_file, result_bgr)
-    
-    st.success(f"Image successfully saved at {save_file}")
 
 
 logging.basicConfig(
@@ -46,8 +35,9 @@ def main():
                 
             display_results(processor.original_image, result, percentage)
             save_path = AppConfig.get('SAVE_DIR')
+            now = datetime.now()
 
-            save_file = os.path.join(save_path, f"segmented_{uploaded_file.name}.png")
+            save_file = os.path.join(save_path, f"segmented_{uploaded_file.name}_{now.strftime("%Y-%m-%d %H:%M:%S")}.png")
 
             # Convert from RGB to BGR before saving, if needed
             result_bgr = cv2.cvtColor(result, cv2.COLOR_RGB2BGR)
@@ -55,7 +45,6 @@ def main():
             cv2.imwrite(save_file, result_bgr)
             
             st.success(f"Image successfully saved at {save_file}")
-            print(save_path)
         except Exception as e:
             st.error(f"Processing error: {str(e)}")
             logging.exception("Application error")
