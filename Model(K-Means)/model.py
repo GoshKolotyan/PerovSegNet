@@ -8,7 +8,7 @@ from sklearn.cluster import KMeans
 
 class Segmenter:
     def __init__(self, image_path):
-        self.image_path = "../"+image_path
+        self.image_path = image_path
 
         self.img_rgb = cv2.cvtColor(cv2.imread(self.image_path), cv2.COLOR_BGR2RGB)
         self.img_gray = cv2.imread(self.image_path, cv2.IMREAD_GRAYSCALE)
