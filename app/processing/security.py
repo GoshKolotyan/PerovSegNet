@@ -15,16 +15,3 @@ def validate_upload(uploaded_file) -> bool:
         
     return True
 
-def safe_save_path(user_input: str) -> str:
-    """Sanitize and validate save directory path"""
-    from config import AppConfig
-    
-    base_dir = os.path.abspath(AppConfig.get('SAVE_DIR'))
-    requested_path = os.path.abspath(user_input)
-    
-    if not requested_path.startswith(base_dir):
-        logging.error(f"Path traversal attempt detected: {user_input}")
-        raise ValueError("Invalid save directory requested")
-        
-    os.makedirs(requested_path, exist_ok=True)
-    return requested_path

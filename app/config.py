@@ -12,3 +12,4 @@ class AppConfig:
     @classmethod
     def get(cls, key: str) -> Any:
         return cls.DEFAULTS.get(key)
+    
