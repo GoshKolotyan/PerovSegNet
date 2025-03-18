@@ -4,7 +4,7 @@ class AppConfig:
     DEFAULTS: Dict[str, Any] = {
         'SAVE_DIR': 'predictions',
         'MAX_FILE_SIZE': 10_000_000,  # 10MB
-        'ALLOWED_MIME_TYPES': ['image/png', 'image/jpeg'],
+        'ALLOWED_MIME_TYPES': ['image/png', 'image/jpeg','image/jpg'],
         'CACHE_TIMEOUT': 3600,
         'NUM_CLUSTERS': 3
     }
