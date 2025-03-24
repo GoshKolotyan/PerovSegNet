@@ -18,14 +18,24 @@ def validate_upload(uploaded_file) -> bool:
         raise ValueError("Unsupported file format")
         
     return True
-def save_segmented_image(result, uploaded_file_name):
+def save_segmented_image(result, uploaded_file_name, percentage: float) -> str:
+
     save_path = AppConfig.get('SAVE_DIR')
     os.makedirs(save_path, exist_ok=True)
     
     timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
     safe_uploaded_filename = uploaded_file_name.replace(" ", "_").replace("/", "_")
-    save_file = os.path.join(save_path, f"segmented_{safe_uploaded_filename}_{timestamp}.png")
+
+    image_filename = f"segmented_{safe_uploaded_filename}_{timestamp}.png"
+    text_filename = f"segmented_{safe_uploaded_filename}_{timestamp}.txt"
+
+    image_save_path = os.path.join(save_path, image_filename)
+    text_save_path = os.path.join(save_path, text_filename)
 
     result_bgr = cv2.cvtColor(result, cv2.COLOR_RGB2BGR)
-    cv2.imwrite(save_file, result_bgr)
-    return save_file
+    cv2.imwrite(image_save_path, result_bgr)
+
+    with open(text_save_path, "w") as f:
+        f.write(f"Percentage: {percentage:.2f}%")
+
+    return image_save_path

@@ -51,7 +51,7 @@ def main():
 
             display_results(processor.original_image, result, percentage)
 
-            save_file = save_segmented_image(result, uploaded_file.name)
+            save_file = save_segmented_image(result, uploaded_file.name, percentage)
 
             st.success(f"Image successfully saved at {save_file}")
             logger.info(f"Image processed and saved: {save_file}")
