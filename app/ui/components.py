@@ -58,11 +58,11 @@ def display_results(original: np.ndarray, result: np.ndarray, percentage: float)
 
     with col1:
         st.subheader("Original Image")
-        st.image(original, use_container_width=True)
+        st.image(original, width='stretch')
 
     with col2:
         st.subheader("Segmented Material")
-        st.image(result, use_container_width=True)
+        st.image(result, width='stretch')
 
 def create_download_button(result: np.ndarray, filename: str, percentage: float):
     """Create download button for segmented image"""
