@@ -7,8 +7,17 @@ from sklearn.cluster import KMeans
 
 
 class Segmenter:
-    def __init__(self, image_path):
+    def __init__(self, image_path, material_selection='auto'):
+        """
+        Args:
+            image_path: Path to the image file
+            material_selection: How to identify material cluster in first pass
+                - 'auto': Use the smaller cluster (assumes material < 50% of image)
+                - 'bright': Use the brighter cluster
+                - 'dark': Use the darker cluster
+        """
         self.image_path = image_path
+        self.material_selection = material_selection
 
         self.img_rgb = cv2.cvtColor(cv2.imread(self.image_path), cv2.COLOR_BGR2RGB)
         self.img_gray = cv2.imread(self.image_path, cv2.IMREAD_GRAYSCALE)
@@ -138,16 +147,32 @@ class Segmenter:
         pixels = self._load_image()
         label2d, cluster_centers = self._kmeans_first_pass(pixels)
 
-        avg_intensity = cluster_centers.flatten()
-        material_cluster = np.argmax(avg_intensity)
+        # Select which cluster represents the material
+        if self.material_selection == 'auto':
+            # Use the smaller cluster (assumes material is minority)
+            cluster_0_count = np.sum(label2d == 0)
+            cluster_1_count = np.sum(label2d == 1)
+            material_cluster = 0 if cluster_0_count < cluster_1_count else 1
+        elif self.material_selection == 'bright':
+            # Use the brighter cluster
+            avg_intensity = cluster_centers.flatten()
+            material_cluster = np.argmax(avg_intensity)
+        elif self.material_selection == 'dark':
+            # Use the darker cluster
+            avg_intensity = cluster_centers.flatten()
+            material_cluster = np.argmin(avg_intensity)
+        else:
+            raise ValueError(f"Invalid material_selection: {self.material_selection}")
 
         binary_mask = (label2d == material_cluster).astype(np.uint8)
 
         segmented_image_material_first = self.img_rgb.copy()
         segmented_image_background_first = self.img_rgb.copy()
 
-        segmented_image_material_first[binary_mask == 0] = [0, 0, 0]
-        segmented_image_background_first[binary_mask == 1] = [0, 0, 0]
+        # binary_mask == 1 means material (brighter cluster)
+        # binary_mask == 0 means background (darker cluster)
+        segmented_image_material_first[binary_mask == 0] = [0, 0, 0]  # Remove background pixels
+        segmented_image_background_first[binary_mask == 1] = [0, 0, 0]  # Remove material pixels
 
         new_labels_2d = self._second_segmentation(segmented_image_material_first)
 

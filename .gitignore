@@ -169,3 +169,25 @@ cython_debug/
 
 # PyPI configuration file
 .pypirc
+
+# Project specific
+# Image files
+*.png
+*.jpg
+*.jpeg
+*.gif
+*.bmp
+*.tiff
+*.tif
+*.svg
+*.webp
+
+# Predictions folder
+predictions/
+Predictions/
+
+# App logs
+app/logs/
+
+# macOS
+.DS_Store
