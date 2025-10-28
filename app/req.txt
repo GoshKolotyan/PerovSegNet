@@ -1,7 +1,0 @@
-pytest
-numpy
-logging
-streamlit
-opencv-python
-matplotlib
-scikit-learn
