@@ -192,3 +192,9 @@ app/logs/
 
 # macOS
 .DS_Store
+
+# Windows
+Thumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+*.lnk

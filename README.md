@@ -13,7 +13,7 @@ Here is an example of the segmentation results produced by **PerovSegNet**:
 - Utilizes machine learning techniques like **KMeans Clustering**
 - Built with **Streamlit** for an interactive UI
 - Supports real-time visualization with **Matplotlib**
-- **Desktop Application** - Standalone executable available for macOS
+- **Desktop Application** - Standalone executable for macOS and Windows
 
 ---
 
@@ -33,30 +33,46 @@ pip install -e .
 streamlit run app/main.py
 ```
 
-### Option 2: Desktop Application (macOS ARM64)
+### Option 2: Desktop Application
 
-Build a standalone executable that doesn't require Python installation:
+Build a standalone executable that doesn't require Python installation.
 
-#### Build
+#### macOS (ARM64: M1/M2/M3/M4)
 
+**Build:**
 ```bash
 ./build.sh
 ```
 
-#### Run
-
+**Run:**
 ```bash
 ./dist/PerovSegNet
 ```
+
+**Distribution:**
+Share the `dist/PerovSegNet` file (~150 MB) with other macOS users.
+
+#### Windows
+
+**Build:**
+```cmd
+build.bat
+```
+
+**Run:**
+```cmd
+dist\PerovSegNet.exe
+```
+
+**Distribution:**
+Share the `dist\PerovSegNet.exe` file (~150 MB) with other Windows users.
+
+#### How It Works
 
 The application will:
 - Start automatically
 - Open your browser to `http://localhost:8080`
 - Run without requiring Python or any dependencies
-
-#### Distribution
-
-Share the `dist/PerovSegNet` file (151 MB) with other macOS users. They can run it directly without any setup.
 
 ---
 
@@ -71,7 +87,8 @@ Share the `dist/PerovSegNet` file (151 MB) with other macOS users. They can run 
 
 ## Desktop Build Files
 
-- `build.sh` - Automated build script
+- `build.sh` - Automated build script (macOS/Linux)
+- `build.bat` - Automated build script (Windows)
 - `run_app.py` - Desktop application launcher
 - `PerovSegNet.spec` - PyInstaller configuration
 
